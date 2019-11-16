@@ -1,0 +1,14 @@
+.ipynb_checkpoints/
+.mypy_cache/
+.pytest_cache/
+
+# python
+__pycache__/
+
+# vscode
+.vs/
+.vscode/
+
+# Custom
+res/
+env/
