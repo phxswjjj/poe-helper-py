@@ -20,29 +20,35 @@ class MouseInfo:
         self._right_click_count += 1
 
     def reset(self):
-        self._right_click_count = 0
+        if not self._right_press:
+            self._right_click_count = 0
 
     def runable(self):
         return self._right_press or self._right_click_count > 0
 
 
 class Job:
-    def __init__(self, skills, interval_sec=0.2):
-        self._skills = skills
+    def __init__(self, skills, interval_sec=0.1):
+        if isinstance(skills, list):
+            self._skills = skills
+        else:
+            self._skills = [skills]
         self._mouse_info: MouseInfo = MouseInfo()
         self._interval_sec = interval_sec
 
-    def run(self):
+    def run(self, *skills):
         mi = self._mouse_info
-        skills = self._skills
+        if skills is None:
+            skills = [y for x in self._skills for y in x]
         if mi.runable():
             for skill in skills:
                 skill.try_fire()
             mi.reset()
 
     def start(self):
-        t = RepeatingTimer(self._interval_sec, self.run)
-        t.start()
+        for skills in self._skills:
+            t = RepeatingTimer(self._interval_sec, self.run, skills)
+            t.start()
 
         def on_mouse_click(x, y, button, pressed):
             mi = self._mouse_info

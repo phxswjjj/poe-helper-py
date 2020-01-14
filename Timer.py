@@ -12,11 +12,15 @@ class RepeatingTimer(threading.Timer):
 if __name__ == '__main__':
     from datetime import datetime
     import time
-    t = RepeatingTimer(3, lambda: print('{}'.format(datetime.now())))
-    t.start()
+    ts = []
+    for i in range(2):
+        t = RepeatingTimer(3, lambda: print('{}'.format(datetime.now())))
+        ts.append(t)
+        t.start()
 
     print('wait...')
     time.sleep(10)
 
-    t.cancel()
+    for t in ts:
+        t.cancel()
     print('end')
